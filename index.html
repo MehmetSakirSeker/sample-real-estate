@@ -1,0 +1,1045 @@
+<!doctype html>
+<html lang="tr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Emlak — Gamified Demo</title>
+  <style>
+    :root {
+      --blue: #0b66ff;
+      --dark: #123;
+      --muted: #6b7280;
+      --bg: #f6f9ff;
+      --card: #ffffff;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --glass: rgba(255, 255, 255, 0.6);
+      --radius: 12px;
+      --max-width: 1100px;
+      --shadow: 0 6px 18px rgba(12, 30, 80, 0.08);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, var(--bg), #fff);
+      color: var(--dark);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: var(--max-width)
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      background: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+      font-size: 1.1rem
+    }
+
+    nav {
+      display: flex;
+      gap: 8px
+    }
+
+    .tab {
+      padding: 8px 14px;
+      border-radius: 10px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--blue);
+      cursor: pointer
+    }
+
+    .tab.active {
+      background: var(--card);
+      box-shadow: var(--shadow);
+      border-color: #e6eefc
+    }
+
+    main {
+      background: transparent
+    }
+
+    /* Public Home */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid #f0f4ff
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid #f0f4ff;
+      cursor: pointer
+    }
+
+    .mock-img {
+      width: 100%;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #eef6ff, #f8fbff);
+      color: var(--muted);
+      font-weight: 700;
+      border-bottom: 1px solid #f0f4ff
+    }
+
+    .mock-img.small {
+      height: 64px;
+      width: 92px
+    }
+
+    .card-body {
+      padding: 12px
+    }
+
+    .card-title {
+      font-weight: 600;
+      margin-bottom: 6px
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 0.95rem
+    }
+
+    /* Dashboard */
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 18px
+    }
+
+    .panel {
+      background: var(--card);
+      padding: 18px;
+      border-radius: 14px;
+      box-shadow: var(--shadow)
+    }
+
+    .progress-wrap {
+      padding: 14px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #f3f7ff, #fff)
+    }
+
+    .progress-track {
+      height: 22px;
+      background: #e8f0ff;
+      border-radius: 11px;
+      overflow: hidden
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), #3bb5ff);
+      width: 0%;
+      transition: width 600ms ease
+    }
+
+    .stat-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 10px
+    }
+
+    .stat {
+      flex: 1;
+      padding: 8px;
+      background: #fbfdff;
+      border-radius: 10px;
+      text-align: center
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    input,
+    button,
+    select,
+    textarea {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #e6eefc;
+      font-size: 1rem
+    }
+
+    button {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      cursor: pointer
+    }
+
+    /* Admin */
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .list-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid #f3f6ff
+    }
+
+    .list-item .info {
+      flex: 1
+    }
+
+    .btns {
+      display: flex;
+      gap: 8px
+    }
+
+    .btn-approve {
+      background: var(--success);
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer
+    }
+
+    .btn-reject {
+      background: var(--danger);
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer
+    }
+
+    .btn-delete {
+      background: transparent;
+      border: 1px solid #f3c2c2;
+      color: var(--danger);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer
+    }
+
+    /* status badges */
+    .badge {
+      padding: 6px 8px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: #fff
+    }
+
+    .badge.approved {
+      background: var(--success)
+    }
+
+    .badge.pending {
+      background: #f59e0b
+    }
+
+    .badge.rejected {
+      background: var(--danger)
+    }
+
+    /* responsive */
+    @media (max-width:900px) {
+      .dashboard {
+        grid-template-columns: 1fr
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px
+      }
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 60
+    }
+
+    .modal {
+      background: var(--card);
+      padding: 18px;
+      border-radius: 12px;
+      max-width: 520px;
+      width: 94%;
+      box-shadow: 0 12px 40px rgba(12, 30, 80, 0.18)
+    }
+
+    .modal h3 {
+      margin: 0 0 8px 0
+    }
+
+    .modal .actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 12px
+    }
+
+    /* Toast */
+    .toast-wrap {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 80
+    }
+
+    .toast {
+      background: #05204a;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      min-width: 190px
+    }
+
+    .btn-clear {
+      background: #fff;
+      border: 1px solid #cfe0ff;
+      color: var(--blue);
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer
+    }
+
+    .btn-cancel {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      color: var(--dark);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer
+    }
+
+    .btn-ok {
+      background: var(--blue);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">E</div>
+        <div>
+          <div style="font-weight:700">Emlak</div>
+          <div style="font-size:0.85rem;color:var(--muted)">Emlak İlanları — Demo</div>
+        </div>
+      </div>
+      <nav id="nav">
+        <button class="tab active" data-view="home">Ana Sayfa</button>
+        <button class="tab" data-view="seller">Satıcı Paneli</button>
+        <button class="tab" data-view="admin">Yönetici</button>
+      </nav>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div id="auth-area">
+          <button id="btn-login" class="tab" style="padding:6px 10px">Giriş</button>
+          <button id="btn-register" class="tab" style="padding:6px 10px">Kayıt</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- HOME -->
+      <section id="view-home" class="view">
+        <h2 style="margin-top:0">Onaylanmış İlanlar</h2>
+        <p style="color:var(--muted);margin-top:4px">Bu bölümde yalnızca yönetici tarafından onaylanmış ilanlar
+          gösterilir.</p>
+
+        <!-- Search & Filters -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center">
+          <input id="q-text" placeholder="İlan başlığı veya konum ara"
+            style="flex:1;min-width:180px;padding:10px;border-radius:10px;border:1px solid #e6eefc">
+          <select id="q-city" style="padding:10px;border-radius:10px;border:1px solid #e6eefc">
+            <option value="">Tüm İller</option>
+          </select>
+          <select id="q-district" style="padding:10px;border-radius:10px;border:1px solid #e6eefc">
+            <option value="">Tüm İlçeler</option>
+          </select>
+          <input id="q-min" placeholder="Min Fiyat"
+            style="width:110px;padding:10px;border-radius:10px;border:1px solid #e6eefc">
+          <input id="q-max" placeholder="Max Fiyat"
+            style="width:110px;padding:10px;border-radius:10px;border:1px solid #e6eefc">
+          <select id="q-sort" style="padding:10px;border-radius:10px;border:1px solid #e6eefc">
+            <option value="newest">En Yeni</option>
+            <option value="price-asc">Fiyat ↑</option>
+            <option value="price-desc">Fiyat ↓</option>
+          </select>
+          <button id="q-clear" class="btn-clear">Temizle</button>
+        </div>
+
+        <div id="home-grid" class="grid" style="margin-top:12px"></div>
+      </section>
+
+      <!-- SELLER DASHBOARD -->
+      <section id="view-seller" class="view" style="display:none">
+        <h2 style="margin-top:0">Satıcı Paneli</h2>
+        <p style="color:var(--muted);margin-top:4px">İlanlarınızı ekleyin, onaylanan ilan başına 1 puan kazanırsınız.
+          100 puana ulaşınca ödül kazanırsınız.</p>
+        <div class="dashboard">
+          <div>
+            <div class="panel">
+              <div class="progress-wrap">
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                  <div style="font-weight:700">İlerleme</div>
+                  <div id="progress-count">0 / 100 İlan</div>
+                </div>
+                <div class="progress-track">
+                  <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat">
+                    <div style="font-weight:600" id="approved-count">0</div>
+                    <div style="font-size:0.82rem;color:var(--muted)">Onaylanan</div>
+                  </div>
+                  <div class="stat">
+                    <div style="font-weight:600" id="pending-count">0</div>
+                    <div style="font-size:0.82rem;color:var(--muted)">Beklemede</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top:12px" id="reward-msg">100 ilana ulaşınca Altın Partner ödülü kazanırsınız.</div>
+            </div>
+
+            <div style="margin-top:14px" class="panel">
+              <h3 style="margin:0 0 8px 0">Yeni İlan Oluştur</h3>
+              <form id="add-form">
+                <input id="f-title" placeholder="Başlık (örn. Ferah 2+1 Daire)" required>
+                <div style="display:flex;gap:8px">
+                  <input id="f-city" placeholder="İl (örn. İstanbul)" required style="flex:1">
+                  <input id="f-district" placeholder="İlçe (örn. Kadıköy)" required style="flex:1">
+                </div>
+                <div style="display:flex;gap:8px">
+                  <input id="f-price" placeholder="Fiyat (örn. 2.500.000₺)" required style="flex:1">
+                  <input id="f-area" placeholder="m² (örn. 95)" style="width:120px">
+                </div>
+                <div style="display:flex;gap:8px">
+                  <input id="f-rooms" placeholder="Oda sayısı (örn. 2+1)" style="flex:1">
+                  <input id="f-floor" placeholder="Kat (örn. 3)" style="width:120px">
+                </div>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <select id="f-type" style="flex:1">
+                    <option value="Daire">Daire</option>
+                    <option value="Villa">Villa</option>
+                    <option value="Stüdyo">Stüdyo</option>
+                    <option value="Arazi">Arazi</option>
+                  </select>
+                  <label style="display:flex;align-items:center;gap:8px"><input id="f-furnished"
+                      type="checkbox">Eşyalı</label>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+                  <label style="flex:0 0 120px;color:var(--muted)">Fotoğraf (opsiyonel)</label>
+                  <input id="f-image" type="file" accept="image/*">
+                </div>
+                <textarea id="f-desc" placeholder="Kısa açıklama (opsiyonel)" rows="3"></textarea>
+                <button type="submit">İlan Gönder (Beklemede)</button>
+              </form>
+            </div>
+          </div>
+
+          <div>
+            <div class="panel">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                <h3 style="margin:0">İlanlarım</h3>
+                <button id="show-history"
+                  style="background:transparent;border:none;color:var(--blue);cursor:pointer">Puan Geçmişi</button>
+              </div>
+              <div id="my-listings"
+                style="display:flex;flex-direction:column;gap:10px;max-height:420px;overflow:auto;padding-right:4px">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ADMIN -->
+      <section id="view-admin" class="view" style="display:none">
+        <h2 id="admin-title" style="margin-top:0">Yönetici Paneli — Bekleyen İlanlar</h2>
+        <p style="color:var(--muted);margin-top:4px">Buradan satıcıların gönderdiği ilanları onaylayabilir, reddedebilir
+          veya silebilirsiniz.</p>
+        <div style="margin-top:8px">
+          <button id="admin-mode-pending" class="tab" style="padding:6px 10px;margin-right:8px">Bekleyen</button>
+          <button id="admin-mode-all" class="tab" style="padding:6px 10px">Tüm İlanlar</button>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <div id="pending-list" class="list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = 'emlak_listings_v1';
+      const EVENTS_KEY = 'emlak_events_v1';
+      const REWARD_SHOWN_KEY = 'emlak_reward_shown_v1';
+      const USERS_KEY = 'emlak_users_v1';
+      const CURRENT_USER_KEY = 'emlak_current_user_v1';
+
+      // simple city -> districts map for selects
+      const CITY_MAP = {
+        'İstanbul': ['Beşiktaş', 'Kadıköy', 'Şişli', 'Üsküdar'],
+        'Ankara': ['Çankaya', 'Kızılay', 'Keçiören'],
+        'Antalya': ['Alanya', 'Muratpaşa'],
+        'İzmir': ['Konak', 'Bornova']
+      };
+
+      // örnek başlangıç verisi: 3 onaylı, 1 beklemede
+      const initial = [
+        { id: 1, title: 'Modern 3+1 Villa — Denize Yakın', price: '8.500.000₺', location: 'Bosphorus', city: 'İstanbul', district: 'Beşiktaş', floor: '2', rooms: '3+1', area: '220', propertyType: 'Villa', furnished: true, agent: 'Ofis A', image: 'images/1.jpg', status: 'approved', desc: 'Geniş bahçe, panoramik deniz manzarası ve özel havuz.' },
+        { id: 2, title: 'Ferah 2+1 Daire — Merkezi Konum', price: '3.200.000₺', location: 'Kadıköy', city: 'İstanbul', district: 'Kadıköy', floor: '5', rooms: '2+1', area: '95', propertyType: 'Daire', furnished: false, agent: 'Ofis A', image: 'images/2.jpg', status: 'approved', desc: 'Açık plan mutfak, güneş alan balkon, metroya yakın.' },
+        { id: 3, title: 'Sahil Stüdyo — Manzaralı', price: '1.900.000₺', location: 'Alanya', city: 'Antalya', district: 'Alanya', floor: '1', rooms: 'Stüdyo', area: '40', propertyType: 'Stüdyo', furnished: false, agent: 'Ofis A', image: 'images/3.jpg', status: 'approved', desc: 'Turistik bölge, kolay erişim, ideal yatırım.' },
+        { id: 4, title: 'Aileye Uygun 3+1 — Yeni', price: '4.200.000₺', location: 'Şişli', city: 'İstanbul', district: 'Şişli', floor: '3', rooms: '3+1', area: '140', propertyType: 'Daire', furnished: true, agent: 'Ofis A', image: 'images/1.jpg', status: 'pending', desc: 'Geniş salon, çocuklu aileler için ideal konum.' }
+      ];
+
+      // load or init (sanitize very large base64 images to avoid blocking UI)
+      function load() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) { localStorage.setItem(STORAGE_KEY, JSON.stringify(initial)); return initial.slice(); }
+        try {
+          const data = JSON.parse(raw);
+          let changed = false;
+          // if parsed value is an array, sanitize oversized base64 images
+          if (Array.isArray(data)) {
+            data.forEach(item => {
+              if (item && item.image && typeof item.image === 'string' && item.image.startsWith('data:') && item.image.length > 200000) {
+                console.warn('Removing oversized image for listing', item.id);
+                item.image = ''; changed = true;
+              }
+            });
+            if (changed) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+            return data;
+          }
+          // fallback if data is not an array
+          return initial.slice();
+        } catch (e) { localStorage.setItem(STORAGE_KEY, JSON.stringify(initial)); return initial.slice(); }
+      }
+      function save(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+
+      // remove stray modal-backdrops from previous runs (if any)
+      document.querySelectorAll('.modal-backdrop').forEach(n => n.remove());
+      let listings = load();
+      let currentImageData = null; // for upload preview
+      let adminViewMode = 'pending';
+
+      // user storage
+      function loadUsers() { try { return JSON.parse(localStorage.getItem(USERS_KEY) || '[]'); } catch (e) { return []; } }
+      function saveUsers(u) { localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
+      function getCurrentUser() { try { return JSON.parse(localStorage.getItem(CURRENT_USER_KEY) || 'null'); } catch (e) { return null; } }
+      function setCurrentUser(u) { localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(u)); showAuthUI(); }
+
+      // show auth area
+      function showAuthUI() {
+        const auth = document.getElementById('auth-area'); auth.innerHTML = '';
+        const user = getCurrentUser();
+        if (user) {
+          const span = document.createElement('span'); span.style.color = 'var(--muted)'; span.style.marginRight = '8px'; span.textContent = user.name + ' (' + user.role + ')';
+          const btnLogout = document.createElement('button'); btnLogout.className = 'tab'; btnLogout.textContent = 'Çıkış'; btnLogout.style.padding = '6px 10px'; btnLogout.onclick = () => { localStorage.removeItem(CURRENT_USER_KEY); showAuthUI(); };
+          auth.appendChild(span); auth.appendChild(btnLogout);
+        } else {
+          const btnLogin = document.createElement('button'); btnLogin.id = 'btn-login-2'; btnLogin.className = 'tab'; btnLogin.textContent = 'Giriş'; btnLogin.style.padding = '6px 10px'; btnLogin.onclick = showLoginModal;
+          const btnReg = document.createElement('button'); btnReg.id = 'btn-register-2'; btnReg.className = 'tab'; btnReg.textContent = 'Kayıt'; btnReg.style.padding = '6px 10px'; btnReg.onclick = showRegisterModal;
+          auth.appendChild(btnLogin); auth.appendChild(btnReg);
+        }
+      }
+
+      function parsePrice(str) {
+        if (!str) return 0;
+        // remove non-digits
+        const num = String(str).replace(/[^0-9]/g, '');
+        return Number(num) || 0;
+      }
+
+      function applyFilters(items) {
+        const q = (document.getElementById('q-text').value || '').toLowerCase().trim();
+        const city = (document.getElementById('q-city').value || '').trim();
+        const district = (document.getElementById('q-district').value || '').trim();
+        const min = parsePrice(document.getElementById('q-min').value);
+        const max = parsePrice(document.getElementById('q-max').value);
+        const sort = document.getElementById('q-sort').value;
+
+        let res = items.filter(i => {
+          const inText = q === '' || (i.title + ' ' + i.city + ' ' + i.district + ' ' + (i.desc || '')).toLowerCase().includes(q);
+          const inCity = city === '' || (i.city === city);
+          const inDistrict = district === '' || (i.district === district);
+          const price = parsePrice(i.price);
+          const inMin = !min || price >= min;
+          const inMax = !max || price <= max;
+          return inText && inCity && inDistrict && inMin && inMax;
+        });
+
+        if (sort === 'price-asc') res.sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
+        else if (sort === 'price-desc') res.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
+        else res.sort((a, b) => b.id - a.id); // newest
+
+        return res;
+      }
+
+      function getUniqueLocations() {
+        const set = new Set(listings.map(l => l.location).filter(Boolean)); return Array.from(set).sort();
+      }
+
+      function populateLocationFilter() {
+        const citySel = document.getElementById('q-city'); const districtSel = document.getElementById('q-district');
+        const cities = Object.keys(CITY_MAP).sort();
+        citySel.innerHTML = '<option value="">Tüm İller</option>' + cities.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+        // populate districts based on selected city or all
+        function refreshDistricts() {
+          const city = citySel.value;
+          const districts = city ? CITY_MAP[city] || [] : Array.from(new Set([].concat(...Object.values(CITY_MAP)))).sort();
+          districtSel.innerHTML = '<option value="">Tüm İlçeler</option>' + districts.map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
+        }
+        citySel.addEventListener('change', () => { refreshDistricts(); renderHome(); });
+        districtSel.addEventListener('change', () => renderHome());
+        refreshDistricts();
+      }
+
+      // wire search inputs (city/district handled in populateLocationFilter)
+      ['q-text', 'q-min', 'q-max', 'q-sort'].forEach(id => {
+        const el = document.getElementById(id); if (!el) return; el.addEventListener('input', () => { renderHome(); });
+      });
+      document.getElementById('q-clear').addEventListener('click', () => { document.getElementById('q-text').value = ''; document.getElementById('q-min').value = ''; document.getElementById('q-max').value = ''; document.getElementById('q-city').value = ''; document.getElementById('q-district').value = ''; document.getElementById('q-sort').value = 'newest'; renderHome(); });
+
+
+      function renderHome() {
+        const grid = document.getElementById('home-grid'); grid.innerHTML = '';
+        // only show approved listings on home
+        let items = listings.filter(l => l.status === 'approved');
+        items = applyFilters(items);
+
+        if (items.length === 0) {
+          grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">Aradığınız kriterlere uygun ilan bulunamadı.</div>';
+        } else {
+          items.forEach(l => {
+            const card = document.createElement('div'); card.className = 'card';
+            card.innerHTML = `
+              ${l.image ? `<img src="${l.image}" class="mock-img" style="object-fit:cover">` : `<div class="mock-img">ÖRNEKTİR</div>`}
+              <div class="card-body">
+                <div class="card-title">${escapeHtml(l.title)}</div>
+                <div style="font-weight:700;color:var(--blue);font-size:1.1rem;margin-bottom:8px">${escapeHtml(l.price)}</div>
+                <div class="meta">
+                  <span>${escapeHtml(l.city || l.location)} / ${escapeHtml(l.district || '')}</span>
+                  <span>${escapeHtml(l.rooms || '-')}</span>
+                </div>
+              </div>
+            `;
+            card.addEventListener('click', () => showDetail(l));
+            grid.appendChild(card);
+          });
+        }
+      }
+
+      function renderSeller() {
+        const approvedCount = listings.filter(l => l.status === 'approved').length;
+        const pendingCount = listings.filter(l => l.status === 'pending').length;
+        document.getElementById('approved-count').textContent = approvedCount;
+        document.getElementById('pending-count').textContent = pendingCount;
+        document.getElementById('progress-count').textContent = `${approvedCount} / 100 İlan`;
+        const pct = Math.min(100, Math.round((approvedCount / 100) * 100));
+        document.getElementById('progress-fill').style.width = pct + '%';
+        const remaining = Math.max(0, 100 - approvedCount);
+        const msg = remaining === 0 ? 'Tebrikler — Altın Partner ödülü kazanıldı! 🎉' : `Kazanmak için ${remaining} ilan daha ekleyin.`;
+        document.getElementById('reward-msg').textContent = msg;
+
+        // my listings list
+        const myList = document.getElementById('my-listings'); myList.innerHTML = '';
+        const my = listings.slice().reverse(); // son eklenen üstte
+        my.forEach(l => {
+          const row = document.createElement('div'); row.className = 'list-item';
+          row.innerHTML = `
+            ${l.image ? `<img src="${l.image}" style="width:64px;height:44px;object-fit:cover;border-radius:8px">` : `<div class=\"mock-img small\">ÖRNEKTİR</div>`}
+            <div class="info">
+              <div style="font-weight:600">${escapeHtml(l.title)}</div>
+              <div style="font-size:0.9rem;color:var(--muted)">${escapeHtml(l.city || l.location)} • ${escapeHtml(l.district || '')}</div>
+              <div style="font-size:0.85rem;color:var(--muted);margin-top:6px">${escapeHtml(l.rooms || '')} • ${escapeHtml(l.area ? l.area + ' m²' : '')} • Kat: ${escapeHtml(l.floor || '-')}</div>
+            </div>
+            <div>
+              <span class="badge ${l.status}">${capitalize(l.status)}</span>
+            </div>`;
+          row.addEventListener('click', () => showDetail(l));
+          myList.appendChild(row);
+        });
+      }
+
+      function renderAdmin() {
+        const pending = listings.filter(l => l.status === 'pending');
+        const wrap = document.getElementById('pending-list'); wrap.innerHTML = '';
+        if (pending.length === 0) { wrap.innerHTML = '<div style="color:var(--muted)">Bekleyen ilan bulunmuyor.</div>'; return }
+        pending.forEach(l => {
+          const item = document.createElement('div'); item.className = 'list-item';
+          item.innerHTML = `
+            ${l.image ? `<img src="${l.image}" style="width:92px;height:64px;object-fit:cover;border-radius:8px">` : `<div class=\"mock-img small\">ÖRNEKTİR</div>`}
+            <div class="info">
+              <div style="font-weight:600">${escapeHtml(l.title)}</div>
+              <div style="color:var(--muted);font-size:0.9rem">${escapeHtml(l.city || l.location)} • ${escapeHtml(l.district || '')} • ${escapeHtml(l.price)}</div>
+              <div style="color:var(--muted);font-size:0.85rem;margin-top:6px">${escapeHtml(l.rooms || '')} • ${escapeHtml(l.area ? l.area + ' m²' : '')} • Kat: ${escapeHtml(l.floor || '')}</div>
+              <div style="color:var(--muted);font-size:0.85rem;margin-top:6px">${escapeHtml(l.desc || '')}</div>
+            </div>
+            <div class="btns">
+              <button class="btn-approve">Onayla</button>
+              <button class="btn-reject">Reddet</button>
+            </div>`;
+          // button handlers
+          const [approveBtn, rejectBtn] = item.querySelectorAll('button');
+          approveBtn.addEventListener('click', () => {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'admin') { return showToast('Bu işlemi yapmak için yönetici olarak giriş yapın.'); }
+            confirmAction('onayla', () => { updateStatus(l.id, 'approved'); addEvent('approved', l); showToast('İlan onaylandı. +1 puan'); });
+          });
+          rejectBtn.addEventListener('click', () => {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'admin') { return showToast('Bu işlemi yapmak için yönetici olarak giriş yapın.'); }
+            confirmAction('reddet', () => { updateStatus(l.id, 'rejected'); addEvent('rejected', l); showToast('İlan reddedildi'); });
+          });
+          wrap.appendChild(item);
+        });
+      }
+
+      // helper to update status
+      function updateStatus(id, newStatus) {
+        const idx = listings.findIndex(x => x.id === id); if (idx === -1) return;
+        listings[idx].status = newStatus;
+        save(listings); render();
+      }
+
+      // ilan ekleme formu
+      (function () {
+        const form = document.getElementById('add-form');
+        if (!form) { console.warn('add-form not found during enhanced wiring'); return; }
+        form.addEventListener('submit', e => {
+          e.preventDefault();
+          try {
+            console.log('add-form: submit handler running');
+            const title = document.getElementById('f-title').value.trim();
+            const price = document.getElementById('f-price').value.trim();
+            const city = document.getElementById('f-city').value.trim();
+            const district = document.getElementById('f-district').value.trim();
+            const area = document.getElementById('f-area').value.trim();
+            const rooms = document.getElementById('f-rooms').value.trim();
+            const floor = document.getElementById('f-floor').value.trim();
+            const type = document.getElementById('f-type').value;
+            const furnished = !!document.getElementById('f-furnished').checked;
+            const desc = document.getElementById('f-desc').value.trim();
+            if (!title || !price || !city || !district) { showToast('Lütfen tüm zorunlu alanları doldurun.'); return; }
+            const id = Date.now();
+            const item = { id, title, price, location: city, city, district, area, rooms, floor, propertyType: type, furnished, agent: 'Siz', image: '', status: 'pending', desc };
+            // if image data was loaded
+            if (currentImageData) { item.image = currentImageData; }
+            listings.push(item);
+            save(listings);
+            populateLocationFilter();
+            render();
+            showToast('İlan kaydedildi — Yönetici onayı bekleniyor', 4000);
+            // temizle
+            document.getElementById('f-title').value = ''; document.getElementById('f-price').value = ''; document.getElementById('f-city').value = ''; document.getElementById('f-district').value = ''; document.getElementById('f-area').value = ''; document.getElementById('f-rooms').value = ''; document.getElementById('f-floor').value = ''; document.getElementById('f-desc').value = ''; document.getElementById('f-furnished').checked = false; document.getElementById('f-image').value = ''; currentImageData = null;
+            console.log('add-form: submit completed, listing id=', id);
+          } catch (err) {
+            console.error('Error in add-form submit:', err);
+            showToast('İlan gönderilirken hata oluştu: ' + (err && err.message ? err.message : String(err)), 6000);
+          }
+        });
+      })();
+
+      // handle image file selection: compress image in-browser to limit size, then store base64
+      document.getElementById('f-image').addEventListener('change', e => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) { currentImageData = null; return; }
+        // compress using canvas to max width 1200px
+        const img = new Image();
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+          img.onload = function () {
+            try {
+              const maxW = 1200; const scale = Math.min(1, maxW / img.width);
+              const cw = Math.max(300, Math.round(img.width * scale));
+              const ch = Math.round(img.height * (cw / img.width));
+              const cvs = document.createElement('canvas'); cvs.width = cw; cvs.height = ch;
+              const ctx = cvs.getContext('2d'); ctx.drawImage(img, 0, 0, cw, ch);
+              const q = 0.75; // quality
+              const dataUrl = cvs.toDataURL('image/jpeg', q);
+              currentImageData = dataUrl;
+            } catch (err) {
+              // fallback to original if something goes wrong
+              currentImageData = ev.target.result;
+            }
+          };
+          img.onerror = function () { currentImageData = ev.target.result; };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // Event storage (point history)
+      function loadEvents() {
+        try { return JSON.parse(localStorage.getItem(EVENTS_KEY) || '[]'); } catch (e) { return []; }
+      }
+      function saveEvents(ev) { localStorage.setItem(EVENTS_KEY, JSON.stringify(ev)); }
+      function addEvent(type, listing) {
+        const ev = loadEvents(); ev.push({ id: Date.now(), type, title: listing.title, listingId: listing.id, ts: new Date().toISOString() }); saveEvents(ev);
+      }
+
+      // Register / Login modals
+      function showRegisterModal() {
+        const backdrop = document.createElement('div'); backdrop.className = 'modal-backdrop';
+        const modal = document.createElement('div'); modal.className = 'modal';
+        modal.innerHTML = `<h3>Kayıt Ol</h3><div style="margin-top:8px"><input id="r-name" placeholder="İsim" style="width:100%;margin-bottom:8px;padding:10px;border-radius:8px;border:1px solid #e6eefc"><input id="r-email" placeholder="E-posta" style="width:100%;margin-bottom:8px;padding:10px;border-radius:8px;border:1px solid #e6eefc"><input id="r-pass" placeholder="Şifre" type="password" style="width:100%;margin-bottom:8px;padding:10px;border-radius:8px;border:1px solid #e6eefc"><select id=\"r-role\" style=\"width:100%;margin-bottom:8px;padding:10px;border-radius:8px;border:1px solid #e6eefc\"><option value=\"seller\">Satıcı</option><option value=\"admin\">Yönetici (demo)</option></select></div>`;
+        const actions = document.createElement('div'); actions.className = 'actions';
+        const btnCancel = document.createElement('button'); btnCancel.textContent = 'İptal'; btnCancel.className = 'btn-cancel'; btnCancel.onclick = () => { backdrop.remove(); };
+        const btnOk = document.createElement('button'); btnOk.textContent = 'Kayıt Ol'; btnOk.className = 'btn-ok'; btnOk.onclick = () => {
+          const name = document.getElementById('r-name').value.trim(); const email = document.getElementById('r-email').value.trim(); const pass = document.getElementById('r-pass').value; const role = document.getElementById('r-role').value;
+          if (!name || !email || !pass) return alert('Lütfen tüm alanları doldurun');
+          const users = loadUsers(); if (users.find(u => u.email === email)) return alert('Bu e-posta ile kayıtlı kullanıcı var');
+          const user = { id: Date.now(), name, email, pass, role }; users.push(user); saveUsers(users); setCurrentUser({ id: user.id, name: user.name, role: user.role }); backdrop.remove(); showToast('Kayıt başarılı');
+        };
+        actions.appendChild(btnCancel); actions.appendChild(btnOk); modal.appendChild(actions); backdrop.appendChild(modal); document.body.appendChild(backdrop);
+      }
+
+      function showLoginModal() {
+        const backdrop = document.createElement('div'); backdrop.className = 'modal-backdrop';
+        const modal = document.createElement('div'); modal.className = 'modal';
+        modal.innerHTML = `<h3>Giriş Yap</h3><div style="margin-top:8px"><input id="l-email" placeholder="E-posta" style="width:100%;margin-bottom:8px;padding:10px;border-radius:8px;border:1px solid #e6eefc"><input id="l-pass" placeholder="Şifre" type="password" style="width:100%;margin-bottom:8px;padding:10px;border-radius:8px;border:1px solid #e6eefc"></div>`;
+        const actions = document.createElement('div'); actions.className = 'actions';
+        const btnCancel = document.createElement('button'); btnCancel.textContent = 'İptal'; btnCancel.className = 'btn-cancel'; btnCancel.onclick = () => { backdrop.remove(); };
+        const btnOk = document.createElement('button'); btnOk.textContent = 'Giriş'; btnOk.className = 'btn-ok'; btnOk.onclick = () => {
+          const email = document.getElementById('l-email').value.trim(); const pass = document.getElementById('l-pass').value;
+          const users = loadUsers(); const user = users.find(u => u.email === email && u.pass === pass);
+          if (!user) return alert('Hatalı kullanıcı/şifre'); setCurrentUser({ id: user.id, name: user.name, role: user.role }); backdrop.remove(); showToast('Giriş başarılı');
+        };
+        actions.appendChild(btnCancel); actions.appendChild(btnOk); modal.appendChild(actions); backdrop.appendChild(modal); document.body.appendChild(backdrop);
+      }
+
+      // Toast helper
+      function showToast(msg, timeout = 3000) {
+        let wrap = document.querySelector('.toast-wrap');
+        if (!wrap) { wrap = document.createElement('div'); wrap.className = 'toast-wrap'; document.body.appendChild(wrap); }
+        const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; wrap.appendChild(t);
+        setTimeout(() => { t.style.opacity = 0; setTimeout(() => t.remove(), 300) }, timeout);
+      }
+
+      // Confirm modal
+      function confirmAction(actionLabel, onConfirm) {
+        const backdrop = document.createElement('div'); backdrop.className = 'modal-backdrop';
+        const modal = document.createElement('div'); modal.className = 'modal';
+        let title = 'İşlemi onaylıyor musunuz?';
+        let okText = 'Onayla';
+        let okColor = 'var(--success)';
+        if (actionLabel === 'reddet') { title = 'İlanı reddetmek istiyor musunuz?'; okText = 'Reddet'; okColor = 'var(--danger)'; }
+        if (actionLabel === 'sil') { title = 'İlanı silmek istiyor musunuz?'; okText = 'Sil'; okColor = 'var(--danger)'; }
+        modal.innerHTML = `<h3>${title}</h3><div style="color:var(--muted);font-size:0.95rem">Bu işlem geri alınamaz.</div>`;
+        const actions = document.createElement('div'); actions.className = 'actions';
+        const btnCancel = document.createElement('button'); btnCancel.textContent = 'İptal'; btnCancel.className = 'btn-cancel'; btnCancel.onclick = () => { backdrop.remove(); };
+        const btnOk = document.createElement('button'); btnOk.textContent = okText; btnOk.className = 'btn-ok'; btnOk.style.background = okColor; btnOk.onclick = () => { backdrop.remove(); onConfirm(); };
+        actions.appendChild(btnCancel); actions.appendChild(btnOk); modal.appendChild(actions); backdrop.appendChild(modal); document.body.appendChild(backdrop);
+      }
+
+      // Reward modal
+      function showReward() {
+        const shown = localStorage.getItem(REWARD_SHOWN_KEY);
+        if (shown) return;
+        const backdrop = document.createElement('div'); backdrop.className = 'modal-backdrop';
+        const modal = document.createElement('div'); modal.className = 'modal';
+        modal.innerHTML = `<h3>Tebrikler!</h3><div style="color:var(--muted);margin-top:6px">100 onaylı ilana ulaştınız — Altın Partner ödülünü kazandınız. Yıl sonunda duyurulacaktır.</div>`;
+        const actions = document.createElement('div'); actions.className = 'actions';
+        const btnOk = document.createElement('button'); btnOk.textContent = 'Kapat'; btnOk.className = 'btn-ok'; btnOk.onclick = () => { backdrop.remove(); localStorage.setItem(REWARD_SHOWN_KEY, '1'); };
+        actions.appendChild(btnOk); modal.appendChild(actions); backdrop.appendChild(modal); document.body.appendChild(backdrop);
+      }
+
+      // Show history
+      document.getElementById('show-history').addEventListener('click', () => {
+        const ev = loadEvents();
+        const backdrop = document.createElement('div'); backdrop.className = 'modal-backdrop';
+        const modal = document.createElement('div'); modal.className = 'modal';
+        modal.innerHTML = `<h3>Puan Geçmişi</h3><div style="max-height:300px;overflow:auto;margin-top:8px">${ev.slice().reverse().map(e => `<div style="padding:8px;border-bottom:1px solid #f3f6ff"><div style="font-weight:600">${escapeHtml(e.title)}</div><div style="color:var(--muted);font-size:0.9rem">${escapeHtml(e.type)} — ${new Date(e.ts).toLocaleString()}</div></div>`).join('') || '<div style="color:var(--muted)">Henüz puan etkinliği yok.</div>'}</div>`;
+        const actions = document.createElement('div'); actions.className = 'actions';
+        const btnOk = document.createElement('button'); btnOk.textContent = 'Kapat'; btnOk.className = 'btn-ok'; btnOk.onclick = () => { backdrop.remove(); };
+        actions.appendChild(btnOk); modal.appendChild(actions); backdrop.appendChild(modal); document.body.appendChild(backdrop);
+      });
+
+      // check reward condition after renders
+      function checkReward() {
+        const approvedCount = listings.filter(l => l.status === 'approved').length;
+        if (approvedCount >= 100 && !localStorage.getItem(REWARD_SHOWN_KEY)) {
+          showReward();
+        }
+      }
+
+      // Detail modal for a listing
+      function showDetail(l) {
+        const backdrop = document.createElement('div'); backdrop.className = 'modal-backdrop';
+        const modal = document.createElement('div'); modal.className = 'modal';
+        modal.innerHTML = `
+          <h3>${escapeHtml(l.title)}</h3>
+          <div style="color:var(--muted);margin-top:6px">${escapeHtml(l.city || l.location)} • ${escapeHtml(l.district || '')} • ${escapeHtml(l.price)}</div>
+          <div style="margin-top:12px">
+            ${l.image ? `<div style="width:100%;height:220px;background:#fff;border-radius:8px;overflow:hidden;margin-bottom:12px"><img src="${l.image}" style="width:100%;height:100%;object-fit:cover"></div>` : `<div style="width:100%;height:220px;background:linear-gradient(135deg,#eef6ff,#f8fbff);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:700;margin-bottom:12px">ÖRNEKTİR</div>`}
+            <div style="display:flex;gap:12px">
+              <div style="flex:1">
+                <div style="background:#f6f9ff;border-radius:8px;padding:12px">${escapeHtml(l.desc || '')}</div>
+                <ul style="margin:10px 0 0 0;padding:0;list-style:none;color:var(--muted)">
+                  <li>Tip: ${escapeHtml(l.propertyType || '-')}</li>
+                  <li>Oda: ${escapeHtml(l.rooms || '-')}</li>
+                  <li>Alan: ${escapeHtml(l.area ? l.area + ' m²' : '-')}</li>
+                  <li>Kat: ${escapeHtml(l.floor || '-')}</li>
+                  <li>Eşyalı: ${l.furnished ? 'Evet' : 'Hayır'}</li>
+                </ul>
+              </div>
+              <div style="width:220px">
+                <div style="background:#fff;border-radius:8px;padding:12px;border:1px solid #f3f6ff">
+                  <div style="font-weight:700">İlanı Veren</div>
+                  <div style="color:var(--muted);margin-top:6px">${escapeHtml(l.agent || '-')}</div>
+                  <div style="margin-top:10px">
+                    <div style="font-weight:600">İletişim</div>
+                    <div style="color:var(--muted);font-size:0.9rem">(demo) iletişim bilgisi burada gösterilebilir.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        const actions = document.createElement('div'); actions.className = 'actions';
+        const btnClose = document.createElement('button'); btnClose.textContent = 'Kapat'; btnClose.className = 'btn-ok'; btnClose.onclick = () => backdrop.remove();
+        actions.appendChild(btnClose); modal.appendChild(actions); backdrop.appendChild(modal); document.body.appendChild(backdrop);
+      }
+
+      // utils
+      function escapeHtml(str) { return String(str || '').replace(/[&<>\\\"]/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[s])); }
+      function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+      // navigation + render wiring
+      const nav = document.getElementById('nav');
+      const tabs = Array.from(nav.querySelectorAll('.tab'));
+      const views = {
+        home: document.getElementById('view-home'),
+        seller: document.getElementById('view-seller'),
+        admin: document.getElementById('view-admin')
+      };
+
+      function switchView(name) {
+        Object.values(views).forEach(v => v.style.display = 'none');
+        if (views[name]) views[name].style.display = 'block';
+        tabs.forEach(t => t.classList.toggle('active', t.dataset.view === name));
+        render();
+      }
+
+      nav.addEventListener('click', e => {
+        const t = e.target.closest('.tab'); if (!t) return; const view = t.dataset.view; if (view) switchView(view);
+      });
+
+      function render() { renderHome(); renderSeller(); renderAdmin(); }
+
+      // initial render: defer heavy render slightly so the page becomes interactive quickly
+      populateLocationFilter();
+      showAuthUI();
+      // keep initial visible view as 'home'
+      setTimeout(() => { switchView('home'); checkReward(); }, 60);
+
+      // attach header auth buttons
+      document.getElementById('btn-login').addEventListener('click', showLoginModal);
+      document.getElementById('btn-register').addEventListener('click', showRegisterModal);
+
+      // admin mode toggle buttons
+      const amPending = document.getElementById('admin-mode-pending');
+      const amAll = document.getElementById('admin-mode-all');
+      if (amPending && amAll) {
+        amPending.addEventListener('click', () => { adminViewMode = 'pending'; amPending.classList.add('active'); amAll.classList.remove('active'); renderAdmin(); });
+        amAll.addEventListener('click', () => { adminViewMode = 'all'; amAll.classList.add('active'); amPending.classList.remove('active'); renderAdmin(); });
+        // set initial active
+        amPending.classList.add('active');
+      }
+
+      // diagnostics: ensure add-form exists and attach a click logger to submit button
+      try {
+        const addForm = document.getElementById('add-form');
+        if (!addForm) { console.warn('add-form element not found'); }
+        else { console.log('add-form found'); const sub = addForm.querySelector('button[type=submit]'); if (sub) sub.addEventListener('click', () => console.log('submit button clicked')); }
+      } catch (err) { console.error('Error attaching diagnostics for add-form', err); }
+
+      // global error handler to surface runtime errors as toasts (helps debugging in-browser)
+      window.addEventListener('error', event => {
+        try { const msg = (event.error && event.error.message) || event.message || 'Unknown error'; console.error('Window error:', msg); showToast('Hata: ' + msg, 6000); } catch (e) { }
+      });
+
+      // expose for console debugging
+      window._emlak = { listings, save, load, render, updateStatus };
+
+    })()
+  </script>
+</body>
+
+</html>
